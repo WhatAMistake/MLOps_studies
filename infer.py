@@ -21,7 +21,7 @@ earlystopper = EarlyStopping(monitor='val_loss', patience=5)
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=42)
 
 model = Sequential()
-model.add(Dense(64, activation='relu', input_shape=(loaded_model)))
+model.add(Dense(64, activation='relu', input_shape=(X.shape[1],)))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(4, activation='sigmoid'))
 
