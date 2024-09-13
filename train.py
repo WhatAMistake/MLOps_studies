@@ -51,8 +51,6 @@ d = {'Bipolar Type-1': 1, 'Bipolar Type-2': 2, 'Depression': 3, 'Normal': 4}
 
 df['Expert Diagnose'] = df['Expert Diagnose'].replace(d).astype(int)
 
-df
-
 df.describe()
 
 from tensorflow.keras.models import Sequential
@@ -63,7 +61,7 @@ from tensorflow.keras.metrics import AUC
 from tensorflow.keras.callbacks import EarlyStopping
 import tensorflow.keras.utils
 
-import numpy as np # Required for casting integers to float values
+import numpy as np
 from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 
