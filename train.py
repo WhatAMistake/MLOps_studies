@@ -8,8 +8,6 @@ Original file is located at
 """
 
 import pandas as pd
-import matplotlib
-import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score
 
 df = pd.read_csv('/content/Dataset-Mental-Disorders.csv')
@@ -58,10 +56,9 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.losses import CategoricalCrossentropy
 from tensorflow.keras.metrics import AUC
+from sklearn.model_selection import train_test_split
 from tensorflow.keras.callbacks import EarlyStopping
 import tensorflow.keras.utils
-
-import numpy as np
 from sklearn.preprocessing import LabelEncoder
 le = LabelEncoder()
 
@@ -86,4 +83,4 @@ model.fit(X, Y, epochs=50, batch_size=10, validation_split=0.2, callbacks=[early
 accuracy = model.evaluate(X_test, Y_test)
 print("Accuracy:", accuracy * 100, "%")
 
-model.save('my_trained_model.keras')
+model.save('my_trained_model.h5')
