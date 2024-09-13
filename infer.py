@@ -1,6 +1,12 @@
 from keras.models import load_model
 from keras.models import save
 
+loaded_model = load_model('./my-trained-model.h5')
+save_path = './saved-model.h5'
+save(loaded_model, save_path)
+
+loaded_model = load_model('./saved-model.h5')
+
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
@@ -15,7 +21,7 @@ earlystopper = EarlyStopping(monitor='val_loss', patience=5)
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=42)
 
 model = Sequential()
-model.add(Dense(64, activation='relu')))
+model.add(Dense(64, activation='relu', input_shape=(loaded_model)))
 model.add(Dense(32, activation='relu'))
 model.add(Dense(4, activation='sigmoid'))
 
