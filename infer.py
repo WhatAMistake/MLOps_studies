@@ -1,33 +1,33 @@
 from keras.models import load_model
-from keras.models import save
-
-loaded_model = load_model('./my-trained-model.h5')
-save_path = './saved-model.h5'
-save(loaded_model, save_path)
-
-loaded_model = load_model('./saved-model.h5')
-
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import CategoricalCrossentropy
 from tensorflow.keras.metrics import AUC
-from tensorflow.keras.callbacks import EarlyStopping
-from sklearn.model_selection import train_test_split
-import tensorflow.keras.utils
 
-earlystopper = EarlyStopping(monitor='val_loss', patience=5)
+from disorder_classifier.classifier_model import DisorderCLF
+from disorder_classifier.preprocess_data import DisorderData
 
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, random_state=42)
+import hydra
+from omegaconf import DictConfig
 
-model = Sequential()
-model.add(Dense(64, activation='relu', input_shape=(loaded_model)))
-model.add(Dense(32, activation='relu'))
-model.add(Dense(4, activation='sigmoid'))
+@hydra.main(version_base=None, config_path="config", config_name="config")
+def main(cfg: DictConfig):
 
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['acc', AUC()])
+    data_splits = DisorderData(
+        data_path=cfg.train.data_path,
+        num_classes=cfg.num_classes,
+        random_state=cfg.random_state
+    )
+    splitted_data = data_splits.get_splitted_data()
 
-model.fit(X, Y, epochs=50, batch_size=10, validation_split=0.2, callbacks=[earlystopper])
+    trained_model = load_model(cfg.infer.model_path)
+    trained_model.compile(
+        optimizer='adam',
+        loss='categorical_crossentropy',
+        metrics=['acc', AUC()]
+        )
+        
+    accuracy = trained_model.evaluate(
+        splitted_data['X_test'],
+        splitted_data['Y_test']
+        )
 
-accuracy = model.evaluate(X_test, Y_test)
-print("Accuracy:", accuracy * 100, "%")
+if __name__ == "__main__":
+    main()
